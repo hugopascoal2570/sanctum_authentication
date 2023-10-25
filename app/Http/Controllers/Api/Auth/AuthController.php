@@ -7,12 +7,23 @@ use App\Http\Requests\Api\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Api\StoreUpdateUser;
+use App\Http\Resources\Api\UserResource;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
+    protected $model;
+
+    public function __construct(User $user)
+    {
+        $this->model = $user;
+    }
+
     public function auth(AuthRequest $request)
     {
+        
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
@@ -47,5 +58,16 @@ class AuthController extends Controller
         return response()->json([
             'me' => $user,
         ]);
+    }
+
+    public function register(StoreUpdateUser $request)
+    {
+        $data = $request->validated();
+
+        $data['password'] = bcrypt($data['password']);
+
+        $user = $this->model->create($data);
+
+        return new UserResource($user);
     }
 }
