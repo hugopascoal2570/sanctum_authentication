@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\{
-    User
+    User,
+    Plan
 };
 use App\Observers\{
-    UserObserver
+    UserObserver,
+    PlanObserver
 };
 
 use Illuminate\Auth\Events\Registered;
@@ -33,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
+        Plan::observe(PlanObserver::class);
     }
 
     /**

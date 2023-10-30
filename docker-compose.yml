@@ -20,7 +20,7 @@ services:
         image: nginx:alpine
         restart: unless-stopped
         ports:
-            - "8885:80"
+            - "8811:80"
         volumes:
             - ./:/var/www
             - ./docker/nginx/:/etc/nginx/conf.d/
@@ -39,7 +39,7 @@ services:
         volumes:
             - ./.docker/mysql/dbdata:/var/lib/mysql
         ports:
-            - "3308:3306"
+            - "3311:3306"
         networks:
             - laravel
 
