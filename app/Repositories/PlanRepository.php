@@ -5,14 +5,13 @@ use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Repositories\BaseRepository;
 
-class PlanRepository 
+class PlanRepository extends AbstractRepository
 {
-	private $model, $baseRepository;
+	private $model;
 
-    public function __construct(Plan $model, BaseRepository $baseRepository)
+    public function __construct(Plan $model)
     {
-        $this->model = $model;
-        $this->baseRepository = $baseRepository;
+        parent::__construct($model);
     }
 
     public function find($id)
@@ -38,61 +37,61 @@ class PlanRepository
         }
     }
 
-    public function show($id)
-    {
-        try {
-            $item = $this->model->where('id', $id)->first();
+//     public function show($id)
+//     {
+//         try {
+//             $item = $this->model->where('id', $id)->first();
 
-            if (!$item) {
-                return response()->json(['message' => 'Item não encontrado'], 404);
-            }
+//             if (!$item) {
+//                 return response()->json(['message' => 'Item não encontrado'], 404);
+//             }
 
-            return response()->json($item, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro interno no servidor'], 500);
-        }
-    }
+//             return response()->json($item, 200);
+//         } catch (\Exception $e) {
+//             return response()->json(['message' => 'Erro interno no servidor'], 500);
+//         }
+//     }
 
-    public function create(array $data)
-    {
-        $plan = $this->model->create($data);
+//     public function create(array $data)
+//     {
+//         $plan = $this->model->create($data);
 
-        return $plan;
-    }
+//         return $plan;
+//     }
 
-    public function update(Plan $plan, array $data)
-    {
-    try {
-        $plan->update($data);
-        return $plan;
-    } catch (\Exception $e) {
-        throw new \Exception('Houve um erro ao atualizar o plano, confira os valores informados.');
-    }
-    }
+//     public function update(Plan $plan, array $data)
+//     {
+//     try {
+//         $plan->update($data);
+//         return $plan;
+//     } catch (\Exception $e) {
+//         throw new \Exception('Houve um erro ao atualizar o plano, confira os valores informados.');
+//     }
+//     }
 
-    public function delete($item, $forceDelete)
-    {
-        $id = $item->id;
-        if ($forceDelete == "true") {
-            return $this->baseRepository->forceDelete($this->model, $id);
-        } else {
-            return $this->baseRepository->delete($this->model, $id);
-        }
-    }
+//     public function delete($item, $forceDelete)
+//     {
+//         $id = $item->id;
+//         if ($forceDelete == "true") {
+//             return $this->baseRepository->forceDelete($this->model, $id);
+//         } else {
+//             return $this->baseRepository->delete($this->model, $id);
+//         }
+//     }
 
-    public function searchByName($name)
-{
-    try {
-        $results = $this->model->where('name', 'like', "%$name%")->get();
+//     public function searchByName($name)
+// {
+//     try {
+//         $results = $this->model->where('name', 'like', "%$name%")->get();
 
-        if ($results->isEmpty()) {
-            return response()->json(['message' => 'Nenhum plano encontrado com o nome fornecido'], 404);
-        }
+//         if ($results->isEmpty()) {
+//             return response()->json(['message' => 'Nenhum plano encontrado com o nome fornecido'], 404);
+//         }
 
-        return response()->json($results, 200);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Erro interno no servidor'], 500);
-    }
-}
+//         return response()->json($results, 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['message' => 'Erro interno no servidor'], 500);
+//     }
+// }
 
 }

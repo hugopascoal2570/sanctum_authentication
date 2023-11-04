@@ -38,19 +38,4 @@ class BaseRepository
         }
     }
 
-    public function searchByName($name)
-{
-    try {
-        $relts = $model->where('name', 'like', "%$name%")->get();
-
-        if ($results->isEmpty()) {
-            return response()->json(['message' => 'Nenhum plano encontrado com o nome fornecido'], 404);
-        }
-
-        return response()->json($results, 200);
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Erro interno no servidor'], 500);
-    }
-}
-
 }

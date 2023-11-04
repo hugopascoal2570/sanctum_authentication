@@ -48,7 +48,7 @@ class DetailPlanRepository
             $item = $this->detailPlan->find($id);
 
             if (!$item) {
-                return response()->json(['message' => 'Item não encontrado'], 404);
+                return response()->json(['message' => 'Nenhum Detalhe do Plano encontrado'], 404);
             }
 
             return response()->json($item, 200);

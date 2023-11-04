@@ -26,10 +26,8 @@ class PlanController extends Controller
 
     public function store(StoreUpdatePlan $request)
     {
-        // Obtenha os dados válidos do Request
         $data = $request->validated();
     
-        // Crie o plano usando o serviço
         $this->planRepository->create($data);
     
         return response()->json(['message' => 'Plano criado com sucesso'], 201);
