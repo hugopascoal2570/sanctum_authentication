@@ -16,13 +16,18 @@ class StoreUpdatePlan extends FormRequest
 
     public function rules()
     {
-        $url = $this->segment(3);
-
-        return [
-            'name' => "required|min:3|max:255|unique:plans,name,{$url},url",
+        $id = $this->segment(3);
+        $rules = [
+            'name' => "required|min:3|max:255|unique:plans,name,{$id},id",
             'description' => 'nullable|min:3|max:255',
             'price' => "required|regex:/^\d+(\.\d{1,2})?$/",
         ];
+    
+        if ($this->isMethod('put')) {
+            $rules['name'] = "required|min:3|max:255";
+        }
+    
+        return $rules;
     }
     public function messages()
     {

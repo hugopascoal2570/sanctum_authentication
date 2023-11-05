@@ -5,17 +5,16 @@ namespace App\Repositories;
 use App\Models\Permission;
 use App\Models\Profile;
 use Illuminate\Http\Request;
-use App\Repositories\BaseRepository;
+use Illuminate\Http\JsonResponse;
 
 class PermissionProfileRepository 
 {
-	private $permission, $profile, $baseRepository;
+	private $permission, $profile;
 
-    public function __construct(Permission $permission, Profile $profile, BaseRepository $baseRepository)
+    public function __construct(Permission $permission, Profile $profile)
     {
         $this->permission = $permission;
         $this->profile = $profile;
-        $this->baseRepository = $baseRepository;
     }
 
     public function permissions($idProfile)
@@ -55,4 +54,36 @@ class PermissionProfileRepository
     return response()->json(['profile' => $profile, 'permissions' => $permissions, 'filters' => $filters], 200);
 }
 
+public function attachPermissionsProfile(Request $request, $idProfile)
+{
+    $profile = $this->profile->find($idProfile);
+
+    if (!$profile) {
+        return response()->json(['message' => 'Perfil não encontrado'], 404);
+    }
+
+    $permissions = $request->permissions;
+
+    if (empty($permissions)) {
+        return response()->json(['message' => 'Escolha pelo menos uma permissão'], 400);
+    }
+
+    $profile->permissions()->attach($permissions);
+
+    return response()->json(['message' => 'Permissões atribuídas com sucesso', 'profile_id' => $profile->id], 201);
+}
+
+public function detachPermissionProfile($idProfile, $idPermission): JsonResponse
+{
+    $profile = $this->profile->find($idProfile);
+    $permission = $this->permission->find($idPermission);
+
+    if (!$profile || !$permission) {
+        return response()->json(['message' => 'Perfil ou permissão não encontrado'], 404);
+    }
+
+    $profile->permissions()->detach($permission);
+
+    return response()->json(['message' => 'Permissão removida com sucesso'], 200);
+}
 }

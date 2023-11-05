@@ -26,4 +26,13 @@ class PermissionProfileController extends Controller
     public function permissionsAvailable(Request $request,$idProfile){
         return $this->permissionProfileRepository->permissionsAvailable($request, $idProfile);
     }
+
+    public function attachPermissionsProfile(Request $request, $idProfile)
+    {
+        return $this->permissionProfileRepository->attachPermissionsProfile($request, $idProfile);
+    }
+    public function detachPermissionProfile($idProfile, $id)
+    {
+        return $this->permissionProfileRepository->detachPermissionProfile($idProfile, $id);
+    }
 }

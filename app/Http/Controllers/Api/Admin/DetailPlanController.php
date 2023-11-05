@@ -5,56 +5,65 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Repositories\DetailPlanRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{
-    Plan,
-    DetailPlan
-};
+use Illuminate\Http\JsonResponse;
+use App\Models\DetailPlan;
 use App\Http\Requests\Api\StoreUpdateDetailPlan;
 
 class DetailPlanController extends Controller
 {
-    private $detailPlanRepository, $detailPlan, $plan;
+    protected $detailPlanRepository;
 
-    public function __construct(DetailPlan $detailPlan, Plan $plan, DetailPlanRepository $detailPlanRepository)
+    public function __construct(DetailPlanRepository $detailPlanRepository)
     {
         $this->detailPlanRepository = $detailPlanRepository;
-        $this->detailPlan = $detailPlan;
-        $this->plan = $plan;
     }
 
-    public function index(Request $request)
+    public function index(): JsonResponse
     {
-        return $this->detailPlanRepository->index($request);
+        $plans = $this->detailPlanRepository->all();
+
+        return response()->json($plans);
+    }
+
+    public function store(StoreUpdateDetailPlan $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $plan = $this->detailPlanRepository->create($data);
+
+        if ($plan) {
+            return response()->json(['message' => 'Plano criado com sucesso'], 201);
+        } else {
+            return response()->json(['message' => 'Falha ao criar o plano'], 422);
+        }
     }
 
     public function show($id)
     {
-        return $this->detailPlanRepository->show($id);
+    $item = $this->detailPlanRepository->show($id);
+
+    if (!$item) {
+        return response()->json(['message' => 'Item não encontrado'], 404);
     }
 
-    public function store(StoreUpdateDetailPlan $request, $url)
-    {
-
-        $data = $request->all();
-        
-        $createdDetailPlan = $this->detailPlanRepository->store($data, $url);
-    
-        return $createdDetailPlan;
+    return response()->json($item, 200);
     }
-    
-    public function update(StoreUpdateDetailPlan $request, $urlPlan, $idDetail)
+
+    public function update(StoreUpdateDetailPlan $request, $id)
     {
+        $plan = $this->detailPlanRepository->find($id);
+    
+        if (!$plan) {
+            return response()->json(['message' => 'Plano não encontrado'], 404);
+        }
+    
         $data = $request->validated();
     
-        $updatedDetailPlan = $this->detailPlanRepository->update($data, $idDetail, $urlPlan);
+        return $this->detailPlanRepository->update($data, $id);
     
-        if (!$updatedDetailPlan) {
-            return response()->json(['message' => 'Erro interno ao atualizar o detalhe do plano'], 500);
-        }
-    return $updatedDetailPlan;
     }
     
-    public function destroy( $urlPlan, string $idDetail,Request $request)
+    public function destroy( string $idDetail, Request $request)
     {
         $forceDelete = $request->input('forceDelete', false);
         $item = $this->detailPlanRepository->find($idDetail);
