@@ -13,4 +13,9 @@ class Plan extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     protected $fillable = ['name','url', 'price','description'];
+
+    public function profiles()
+    {
+        return $this->belongsToMany(Profile::class);
+    }
 }

@@ -31,8 +31,10 @@ class PermissionProfileController extends Controller
     {
         return $this->permissionProfileRepository->attachPermissionsProfile($request, $idProfile);
     }
-    public function detachPermissionProfile($idProfile, $id)
+    
+    public function detachPermissionProfile($idPlan, Request $request)
     {
-        return $this->permissionProfileRepository->detachPermissionProfile($idProfile, $id);
+        $data = $request->all();
+        return $this->permissionProfileRepository->detachPermissionProfile($idPlan, $data,);
     }
 }

@@ -73,7 +73,7 @@ public function attachPermissionsProfile(Request $request, $idProfile)
     return response()->json(['message' => 'Permissões atribuídas com sucesso', 'profile_id' => $profile->id], 201);
 }
 
-public function detachPermissionProfile($idProfile, $idPermission): JsonResponse
+public function detachPermissionProfile($idProfile,$idPermission): JsonResponse
 {
     $profile = $this->profile->find($idProfile);
     $permission = $this->permission->find($idPermission);
