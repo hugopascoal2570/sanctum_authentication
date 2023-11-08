@@ -23,7 +23,6 @@ class AuthController extends Controller
 
     public function auth(AuthRequest $request)
     {
-        
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([

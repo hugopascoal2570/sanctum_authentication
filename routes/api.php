@@ -7,10 +7,10 @@ use App\Http\Controllers\Api\Admin\PermissionController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\ACL\PermissionProfileController;
 use App\Http\Controllers\Api\ACL\PlanProfileController;
+use App\Http\Controllers\Api\Auth\AuthController;
 
-Route::prefix('admin')
-    ->group(function() {
-        
+Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
+
     /**
      * Plan x Profile
      */
@@ -44,11 +44,7 @@ Route::prefix('admin')
 });
 
 
-// Route::post('/login', [AuthController::class, 'auth']);
-// Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-// Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
-// Route::post('/register', [AuthController::class, 'register']);
-
-// Route::middleware(['auth:sanctum'])->group(function () {
-
-// });
+Route::post('/login', [AuthController::class, 'auth']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/register', [AuthController::class, 'register']);
