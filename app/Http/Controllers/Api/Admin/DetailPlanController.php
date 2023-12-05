@@ -18,10 +18,10 @@ class DetailPlanController extends Controller
         $this->detailPlanRepository = $detailPlanRepository;
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $plans = $this->detailPlanRepository->all();
-
+        $plans = $this->detailPlanRepository->all($request);
+    
         return response()->json($plans);
     }
 

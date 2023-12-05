@@ -18,10 +18,10 @@ class PermissionController extends Controller
         $this->permissionRepository = $permissionRepository;
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $plans = $this->permissionRepository->all();
-
+        $plans = $this->permissionRepository->all($request);
+    
         return response()->json($plans);
     }
 

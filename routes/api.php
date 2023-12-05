@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\PermissionController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\ACL\PermissionProfileController;
 use App\Http\Controllers\Api\ACL\PlanProfileController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 
 Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
@@ -40,6 +41,8 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
 
     Route::get('planos/search',[PlanController::class, 'searchByName']);
     Route::resource('planos', PlanController::class);
+
+    Route::resource('users', UserController::class);
     
 });
 

@@ -21,9 +21,26 @@ abstract class AbstractRepository{
         }
     }
 
-    public function all()
+    public function all($request)
     {
-        $models = $this->model->all();
+        $paginate = $request->input('paginate', true);
+        $perPage = $request->input('perPage', 10);
+        $orderBy = $request->input('OrderBy', 'id');
+        $order = $request->input('Order',);
+    
+        $validOrderDirections = ['asc', 'desc'];
+    
+        if (!in_array($order, $validOrderDirections)) {
+            return response()->json(['message' => 'Direção de ordenação inválida. Use "asc" ou "desc"'], 400);
+        }
+    
+        $query = $this->model->orderBy($orderBy, $order);
+    
+        if ($paginate) {
+            $models = $query->paginate($perPage);
+        } else {
+            $models = $query->get();
+        }
     
         if ($models->isEmpty()) {
             return response()->json(['message' => 'Nenhum item encontrado'], 404);
@@ -32,7 +49,7 @@ abstract class AbstractRepository{
         return response()->json(['message' => 'Itens encontrados com sucesso', 'data' => $models], 200);
     }
     
-
+    
     public function create(array $data)
     {
         $model = $this->model->create($data);
@@ -55,21 +72,23 @@ abstract class AbstractRepository{
         }
     }
 
-public function update($data, $id)
-{
-    $model = $this->model->find($id);
-
-    if (!$model) {
-        return response()->json(['message' => 'Não foi possível encontrar o item'], 404);
-    }
-
-    try {
+    public function update(array $data, $id)
+    {
+        $model = $this->model->find($id);
+    
+        if (!$model) {
+            return null;
+        }
+    
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
+    
         $model->update($data);
+        
         return $model;
-    } catch (\Exception $e) {
-        return response()->json(['message' => 'Houve um erro ao atualizar os itens, confira os dados informados'], 500);
     }
-}
+    
 
 public function performDelete($id, $forceDelete = false)
 {

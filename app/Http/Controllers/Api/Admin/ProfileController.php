@@ -7,6 +7,7 @@ use App\Http\Requests\Api\StoreUpdateProfile;
 use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Repositories\ProfileRepository;
+use Illuminate\Http\JsonResponse;
 
 class ProfileController extends Controller
 {
@@ -19,22 +20,11 @@ class ProfileController extends Controller
 
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        try {
-            $page = $request->input('page', 1);
-            $perPage = $request->input('perPage', 10);
+        $plans = $this->profileRepository->all($request);
     
-            $dados = $this->model->paginate($perPage, ['*'], 'page', $page);
-    
-            if ($dados->isEmpty()) {
-                return response()->json(['message' => 'Perfil não encontrado'], 404);
-            }
-    
-            return response()->json($dados, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro interno no servidor'], 500);
-        }
+        return response()->json($plans);
     }
 
     public function show($id)
@@ -71,7 +61,7 @@ class ProfileController extends Controller
     
         $data = $request->validated();
     
-        $this->profileRepository->update($plan, $data);
+        $this->profileRepository->update($data, $plan);
     
         return response()->json(['message' => 'Plano atualizado com sucesso'], 200);
     }
