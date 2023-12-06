@@ -23,13 +23,14 @@ abstract class AbstractRepository{
 
     public function all($request)
     {
+
         $paginate = $request->input('paginate', true);
         $perPage = $request->input('perPage', 10);
-        $orderBy = $request->input('OrderBy', 'id');
-        $order = $request->input('Order',);
-    
+        $orderBy = $request->input('orderBy', 'id'); // Corrigido o nome do parâmetro
+        $order = $request->input('order', 'asc'); // Corrigido o nome do parâmetro e fornecido um valor padrão
+        
         $validOrderDirections = ['asc', 'desc'];
-    
+        
         if (!in_array($order, $validOrderDirections)) {
             return response()->json(['message' => 'Direção de ordenação inválida. Use "asc" ou "desc"'], 400);
         }

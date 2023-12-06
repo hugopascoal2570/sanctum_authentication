@@ -42,6 +42,7 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
     Route::get('planos/search',[PlanController::class, 'searchByName']);
     Route::resource('planos', PlanController::class);
 
+    Route::get('users/search',[UserController::class, 'searchByUser']);
     Route::resource('users', UserController::class);
     
 });

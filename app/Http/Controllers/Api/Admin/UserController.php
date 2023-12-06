@@ -73,4 +73,11 @@ class UserController extends Controller
     
         return $this->userRepository->delete($item, $forceDelete);
     }
+
+    public function searchByUser(Request $request)
+    {
+        $request->all();
+        return $this->userRepository->searchByName($request->name, $request->email);
+    
+    }
 }

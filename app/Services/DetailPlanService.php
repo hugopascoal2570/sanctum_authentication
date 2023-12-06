@@ -104,7 +104,7 @@ class DetailPlanService
     public function delete($url, $idDetail, $forceDelete = true)
     {
         $plan = $this->plan->where('url', $url)->first();
-        $detailPlan = $this->model->find($idDetail);
+        $detailPlan = $this->detailPlan->find($idDetail);
     
         if (!$plan || !$detailPlan) {
             return ['message' => 'Detalhe do plano não encontrado'];
@@ -127,7 +127,7 @@ class DetailPlanService
 public function searchByName($name)
 {
     try {
-        $results = $this->model->where('name', 'like', "%$name%")->get();
+        $results = $this->detailPlan->where('name', 'like', "%$name%")->get();
 
         if ($results->isEmpty()) {
             return response()->json(['message' => 'Nenhum detalhe do plano encontrado com o nome fornecido'], 404);

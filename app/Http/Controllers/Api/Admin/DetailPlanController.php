@@ -74,5 +74,5 @@ class DetailPlanController extends Controller
     
         return $this->detailPlanRepository->delete($item, $forceDelete);
     }
-    
+        
 }
